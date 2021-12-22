@@ -1,9 +1,14 @@
 <script>
+	import { goto } from '$app/navigation';
 	import '../app.css';
 
 	let user = {
 		name: 'Evan Morrison',
 		email: 'evanrmorrison@gmail.com'
+	};
+
+	const handleLogout = () => {
+		goto('/signup');
 	};
 </script>
 
@@ -18,7 +23,7 @@
 	</div>
 </div>
 <div class="flex justify-end p-2">
-	<button>{user.name} <span class="material-icons-round align-middle">logout</span> sign out</button>
+	<button on:click={handleLogout}>{user.name} <span class="material-icons-round align-middle">logout</span> sign out</button>
 </div>
 <div>
 	<div>

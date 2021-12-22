@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body, #svelte {
+  height: 100%;
+}
+
 body {
   @apply font-light;
 }
