@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#svelte {
+	height: 100%;
+}
+
 body {
-  @apply font-light;
+	@apply font-light;
+}
+
+a {
+	@apply underline text-indigo-500;
+}
+
+a:visited {
+	@apply text-indigo-600;
 }

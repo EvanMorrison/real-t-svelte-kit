@@ -1,7 +1,7 @@
 {
 	"editor.tabSize": 2,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"files.autoSave": "afterDelay",
+	"files.autoSave": "onFocusChange",
 	"css.validate": false,
 	"less.validate": false,
 	"scss.validate": false,
