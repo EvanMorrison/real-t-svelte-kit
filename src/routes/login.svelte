@@ -3,18 +3,16 @@
 	import InputField from '$lib/components/inputField.svelte';
 	import { enhance } from '$lib/actions/form';
 
-	let newUser: UserSignup = {
+	let user: UserLogin = {
 		email: '',
-		password: '',
-		passConfirm: ''
+		password: ''
 	};
 	let error = '';
-	let passConfirmError = '';
 
-	const handleSignupError = async (res: Response, form: HTMLFormElement) => {
+	const handleLoginError = async (res: Response, form: HTMLFormElement) => {
 		const result = await res.json();
+		console.log('result', result);
 		error = result.message;
-		passConfirmError = result.fields?.passConfirm;
 	};
 </script>
 
@@ -22,21 +20,21 @@
 	<div class="flex place-content-center items-center">
 		<form
 			use:enhance={{
-				result: handleSignupError
+				result: handleLoginError
 			}}
-			action="/signup.json"
-			method="POST"
+			action="/login.json"
+			method="GET"
 			autocomplete="off"
-			class="flex-1 max-w-md flex flex-col overflow-hidden items-center border-2 rounded-md px-10 pt-0"
+			class="flex-1 max-w-md flex flex-col items-center overflow-hidden border-2 rounded-md px-10 pt-0"
 		>
 			<div class="-mx-10 self-stretch py-4 bg-indigo-400 min-w-full text-white text-center mb-8">
-				SIGN UP
+				LOGIN
 			</div>
 			{#if error}
 				<div class="text-red-600 text-center">{error}</div>
 			{/if}
 			<InputField
-				bind:value={newUser.email}
+				bind:value={user.email}
 				label="Email"
 				id="email"
 				name="email"
@@ -45,7 +43,7 @@
 				placeholder="email@example.com"
 			/>
 			<InputField
-				bind:value={newUser.password}
+				bind:value={user.password}
 				label="Password"
 				id="password"
 				name="password"
@@ -53,24 +51,14 @@
 				required
 				placeholder=" "
 			/>
-			<InputField
-				bind:value={newUser.passConfirm}
-				label="Confirm Password"
-				id="passConfirm"
-				name="passConfirm"
-				type="password"
-				required
-				error={passConfirmError}
-				placeholder=" "
-			/>
 			<div>
-				<Button>Signup</Button>
+				<Button>Login</Button>
 			</div>
 			<div class="flex justify-center my-6">
 				<div class="flex-1 max-w-md text-center text-sm">
-					Already have an account? <a href="/login"
-						><span class="material-icons-round align-middle ml-2 mr-1">login</span>
-						Login</a
+					Don't have an account? <a href="/signup"
+						><span class="material-icons-round align-middle ml-2 mr-1">person_add</span>
+						Sign up</a
 					>.
 				</div>
 			</div>
