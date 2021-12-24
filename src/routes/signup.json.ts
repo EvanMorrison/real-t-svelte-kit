@@ -6,22 +6,34 @@ import PrismaClient from '$lib/prisma';
 const prisma = new PrismaClient();
 const saltRounds = 10;
 
-export const post: RequestHandler = async ({ body }: Request) => {
-	const data = bodyParser<UserSignup>(body);
+export const post: RequestHandler = async (request: Request) => {
+	const data = bodyParser<UserSignup>(request.body);
 
 	const existingUser = await prisma.user.findFirst({
 		where: {
-			Email: data.email
+			email: data.email
 		}
 	});
 
-	if (existingUser?.UserId) {
+	if (existingUser?.userId) {
 		return {
 			status: 400,
 			body: {
-				message: 'An account with that email already exists',
+				message: 'Could not create an account',
 				fields: {
-					email: 'email is already registered to an account'
+					email: 'Email is already registered to an account'
+				}
+			}
+		};
+	}
+
+	if (data.password.length < 8) {
+		return {
+			status: 400,
+			body: {
+				message: 'Could not create an account',
+				fields: {
+					password: 'Password must be at least 8 characters long.'
 				}
 			}
 		};
@@ -31,30 +43,33 @@ export const post: RequestHandler = async ({ body }: Request) => {
 		return {
 			status: 400,
 			body: {
-				message: 'Passwords do not match',
+				message: 'Could not create an account',
 				fields: {
-					passConfirm: 'passwords do not match'
+					passConfirm: 'Passwords do not match'
 				}
 			}
 		};
 	}
 
-	// TODO: add min password requirements
-
 	const hashedPass = await bcrypt.hash(data.password, saltRounds);
 
-	const newUser = await prisma.user.create({
+	await prisma.user.create({
 		data: {
-			Email: data.email,
-			Password: hashedPass,
-			FirstName: ''
+			email: data.email,
+			password: hashedPass
 		}
 	});
 
+	if (request.headers.accept !== 'application/json') {
+		return {
+			status: 302,
+			headers: {
+				location: '/app'
+			}
+		};
+	}
+
 	return {
-		status: 303,
-		headers: {
-			location: '/'
-		}
+		status: 200
 	};
 };

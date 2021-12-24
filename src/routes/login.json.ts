@@ -1,16 +1,17 @@
 import type { Request, RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
+import { serialize } from 'cookie';
 import { bodyParser } from '$lib/bodyParser';
 import PrismaClient from '$lib/prisma';
 
 const prisma = new PrismaClient();
 
-export const get: RequestHandler = async ({ body }: Request) => {
-	const data = bodyParser<UserLogin>(body);
+export const post: RequestHandler = async (request: Request) => {
+	const data = bodyParser<UserLogin>(request.body);
 
-	const existingUser = await prisma.user.findFirst({
+	const existingUser = await prisma.user.findUnique({
 		where: {
-			Email: data.email
+			email: data.email
 		}
 	});
 
@@ -23,7 +24,7 @@ export const get: RequestHandler = async ({ body }: Request) => {
 		};
 	}
 
-	const match = await bcrypt.compare(data.password, existingUser.Password);
+	const match = await bcrypt.compare(data.password, existingUser.password);
 
 	if (!match) {
 		return {
@@ -34,9 +35,22 @@ export const get: RequestHandler = async ({ body }: Request) => {
 		};
 	}
 
+	const session = await prisma.session.create({
+		data: {
+			userId: existingUser.userId
+		}
+	});
+
 	return {
 		status: 303,
 		headers: {
+			'Set-Cookie': serialize('sessionId', session.sessionId, {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'strict',
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 60 * 60 * 24 * 7 // one week
+			}),
 			location: '/app'
 		}
 	};

@@ -12,11 +12,7 @@ export const enhance = (form: HTMLFormElement, { result }) => {
 				body
 			});
 
-			if (response.ok) {
-				result(response, form);
-			} else {
-				console.log('Fetch error', await response.text());
-			}
+			result(response, form);
 		} catch (error) {
 			console.error(`Fetch error: ${error}`);
 		}

@@ -1,5 +1,13 @@
 /// <reference types="@sveltejs/kit" />
 
+interface CurrentUser {
+	firstName: string;
+	lastName: string;
+	email: string;
+	role: string;
+	avatar: string;
+}
+
 interface User {
 	userId: string;
 	firstName: string;
