@@ -3,7 +3,7 @@
 
 	let x = 0;
 	let y = 0;
-  let radius = 0;
+	let radius = 0;
 
 	const ripple = tweened({ scale: 0, opacity: 1 });
 
@@ -25,7 +25,7 @@
     relative
     border-2
     border-indigo-500
-    rounded-sm
+    rounded-md
     px-4
     py-2
     bg-indigo-500
@@ -51,10 +51,10 @@
 
 <style>
 	.ripple {
-    opacity: var(--opacity);
-    width: calc(var(--radius) * 2);
-    height: calc(var(--radius) * 2);
-    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--scale));
+		opacity: var(--opacity);
+		width: calc(var(--radius) * 2);
+		height: calc(var(--radius) * 2);
+		transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--scale));
 		background-color: hsl(0deg 0% 100% / 0.4);
 	}
 </style>

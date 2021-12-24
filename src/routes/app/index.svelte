@@ -1,14 +1,23 @@
-<script>
-	import { goto } from '$app/navigation';
+<script lang="ts" context="module">
+	export async function load({ session }) {
+		console.log('load session', session);
+		if (!session?.user) {
+			return {
+				status: 302,
+				redirect: '/'
+			};
+		}
 
-	let user = {
-		name: 'Evan Morrison',
-		email: 'evanrmorrison@gmail.com'
-	};
+		return {
+			props: {
+				user: session.user
+			}
+		};
+	}
+</script>
 
-	const handleLogout = () => {
-		goto('/signup');
-	};
+<script lang="ts">
+	export let user: CurrentUser;
 </script>
 
 <div
@@ -24,8 +33,8 @@
 	</div>
 </div>
 <div class="flex justify-end p-2">
-	<button on:click={handleLogout}
-		>{user.name} <span class="material-icons-round align-middle">logout</span> sign out</button
+	<a class="no-underline visited:text-gray-800" href="/logout"
+		>{user.firstName} <span class="material-icons-round align-middle">logout</span> sign out</a
 	>
 </div>
 <div>
