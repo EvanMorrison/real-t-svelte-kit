@@ -35,14 +35,24 @@ export const post: RequestHandler = async (request: Request) => {
 		};
 	}
 
-	const session = await prisma.session.create({
-		data: {
+	let session: { sessionId: any; userId?: number };
+
+	session = await prisma.session.findFirst({
+		where: {
 			userId: existingUser.userId
 		}
 	});
 
+	if (!session) {
+		session = await prisma.session.create({
+			data: {
+				userId: existingUser.userId
+			}
+		});
+	}
+
 	return {
-		status: 303,
+		status: 200,
 		headers: {
 			'Set-Cookie': serialize('sessionId', session.sessionId, {
 				path: '/',
@@ -50,8 +60,7 @@ export const post: RequestHandler = async (request: Request) => {
 				sameSite: 'strict',
 				secure: process.env.NODE_ENV === 'production',
 				maxAge: 60 * 60 * 24 * 7 // one week
-			}),
-			location: '/app'
+			})
 		}
 	};
 };

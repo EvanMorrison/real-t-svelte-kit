@@ -1,5 +1,6 @@
 import type { Request, RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
+import { serialize } from 'cookie';
 import { bodyParser } from '$lib/bodyParser';
 import PrismaClient from '$lib/prisma';
 
@@ -53,18 +54,30 @@ export const post: RequestHandler = async (request: Request) => {
 
 	const hashedPass = await bcrypt.hash(data.password, saltRounds);
 
-	await prisma.user.create({
+	const newUser = await prisma.user.create({
 		data: {
 			email: data.email,
 			password: hashedPass
 		}
 	});
 
+	const session = await prisma.session.create({
+		data: {
+			userId: newUser.userId
+		}
+	});
+
 	if (request.headers.accept !== 'application/json') {
 		return {
-			status: 302,
+			status: 200,
 			headers: {
-				location: '/app'
+				'Set-Cookie': serialize('sessionId', session.sessionId, {
+					path: '/',
+					httpOnly: true,
+					sameSite: 'strict',
+					secure: process.env.NODE_ENV === 'production',
+					maxAge: 60 * 60 * 24 * 7 // one week
+				})
 			}
 		};
 	}

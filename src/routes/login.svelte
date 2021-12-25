@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Button from '$lib/components/button.svelte';
 	import InputField from '$lib/components/inputField.svelte';
 	import { enhance } from '$lib/actions/form';
@@ -11,9 +10,9 @@
 	};
 	let error = '';
 
-	const handleLoginResponse = async (res: Response, form: HTMLFormElement) => {
+	const handleLoginResponse = async (res: Response) => {
 		if (res.ok) {
-			goto('/app');
+			window.location.href = '/app';
 			return;
 		}
 
