@@ -1,7 +1,5 @@
-<script>
+<script lang="ts">
 	import Header from '$lib/pageComponents/authPageHeader.svelte';
-
-	fetch('/logout.json');
 </script>
 
 <Header />

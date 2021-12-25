@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
 	export async function load({ session }) {
-		console.log('load session', session);
 		if (!session?.user) {
 			return {
 				status: 302,
@@ -33,7 +32,7 @@
 	</div>
 </div>
 <div class="flex justify-end p-2">
-	<a class="no-underline visited:text-gray-800" href="/logout"
+	<a class="no-underline visited:text-gray-800" href="/logout.json" rel="external"
 		>{user.firstName} <span class="material-icons-round align-middle">logout</span> sign out</a
 	>
 </div>
