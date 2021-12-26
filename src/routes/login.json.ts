@@ -1,5 +1,5 @@
 import type { Request, RequestHandler } from '@sveltejs/kit';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { serialize } from 'cookie';
 import { bodyParser } from '$lib/bodyParser';
 import PrismaClient from '$lib/prisma';
