@@ -1,19 +1,7 @@
-import type { Request, RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from '@sveltejs/kit';
 import { prisma } from '$lib/prisma';
 import { bodyParser } from '$lib/bodyParser';
-
-const checkAuth = (request: Request) => {
-	const user: CurrentUser = request.locals.user;
-	return {
-		isAuthorized: ['ADMIN', 'USER'].includes(user?.role || ''),
-		unauthorizedResponse: {
-			status: 403,
-			body: {
-				message: 'Not authorized.'
-			}
-		}
-	};
-};
+import { checkAuth } from '$lib/checkAuth';
 
 export const get: RequestHandler = () => {};
 

@@ -30,8 +30,8 @@
 	<div>
 		<div class="flex justify-around py-8">
 			<div class="grid-item">
-				<a class="main-nav-links" href="app/caseList">
-					<h1>All Cases</h1>
+				<a class="main-nav-links" href="app/projects">
+					<h1>All Projects</h1>
 					<span class="material-icons-round home-icon">view_list</span>
 				</a>
 			</div>
