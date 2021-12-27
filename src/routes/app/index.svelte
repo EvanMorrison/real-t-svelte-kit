@@ -1,22 +1,7 @@
-<script lang="ts" context="module">
-	export async function load({ session }) {
-		if (!session?.user) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
-
-		return {
-			props: {
-				user: session.user
-			}
-		};
-	}
-</script>
-
 <script lang="ts">
-	export let user: CurrentUser;
+	import { getContext } from 'svelte';
+
+	const user: CurrentUser = getContext('currentUser');
 </script>
 
 <div
@@ -32,38 +17,43 @@
 	</div>
 </div>
 <div class="flex justify-end p-2">
-	<a class="no-underline visited:text-gray-800" href="/logout.json" rel="external"
-		>{user.firstName} <span class="material-icons-round align-middle">logout</span> sign out</a
+	<a class="text-inherit visited:text-inherit" href="/app/account"
+		>{(user && user.firstName) || user.email || 'Account'}
+		<span class="material-icons-round align-middle text-xl">manage_accounts</span></a
+	>
+	&nbsp; | &nbsp;
+	<a class="text-inherit visited:text-inherit" href="/logout.json" rel="external"
+		>log out <span class="material-icons-round align-middle text-xl">logout</span></a
 	>
 </div>
 <div>
 	<div>
 		<div class="flex justify-around py-8">
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseList">
-					<h1>All Cases</h1>
+				<a class="main-nav-links" href="app/projects">
+					<h1>All Projects</h1>
 					<span class="material-icons-round home-icon">view_list</span>
-				</div>
+				</a>
 			</div>
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseDashboard">
+				<a class="main-nav-links" href="app/dashboard">
 					<h1>Case Dashboard</h1>
 					<span class="material-icons-round home-icon">chrome_reader_mode</span>
-				</div>
+				</a>
 			</div>
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseSetupStart">
-					<h1>New Case</h1>
+				<a class="main-nav-links" href="app/project-create">
+					<h1>New Project</h1>
 					<span class="material-icons-round home-icon">create_new_folder</span>
-				</div>
+				</a>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-	.grid-item {
-		@apply text-3xl text-gray-500 text-center;
+	.grid-item a {
+		@apply text-3xl text-gray-500 text-center no-underline flex flex-col items-center;
 	}
 
 	.home-icon {

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { tweened } from 'svelte/motion';
 
+	export let variant = 'primary';
+
 	let x = 0;
 	let y = 0;
 	let radius = 0;
@@ -32,6 +34,8 @@
     text-white
     hover:bg-indigo-600
   "
+	class:border={variant === 'border'}
+	class:text-only={variant === 'text'}
 >
 	<span
 		class="
@@ -56,5 +60,9 @@
 		height: calc(var(--radius) * 2);
 		transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--scale));
 		background-color: hsl(0deg 0% 100% / 0.4);
+	}
+
+	.text-only {
+		@apply bg-transparent text-indigo-500 border-transparent;
 	}
 </style>

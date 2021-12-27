@@ -2,9 +2,7 @@ import type { Request, RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 import { serialize } from 'cookie';
 import { bodyParser } from '$lib/bodyParser';
-import PrismaClient from '$lib/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '$lib/prisma';
 
 export const post: RequestHandler = async (request: Request) => {
 	const data = bodyParser<UserLogin>(request.body);

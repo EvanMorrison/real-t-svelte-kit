@@ -5,60 +5,91 @@
 	export let helperText = '';
 	export let required = false;
 	export let value = '';
+	export let textarea = false;
+	export let bg = 'bg-white';
 </script>
 
-<div class="relative py-2 w-full flex flex-col">
+<div class="relative py-1 w-full flex flex-col">
 	<div
-		class="
+		class={`
       relative
       border-2
       border-indigo-500
       rounded-lg
-      p-2
+      p-1.5
       flex
       flex-1
-    "
+			${bg}
+    `}
 		class:error
 	>
-		<input
-			on:focus
-			on:blur
-			on:input
-			bind:value
-			{id}
-			{required}
-			{...$$restProps}
-			class="
+		{#if textarea}
+			<textarea
+				on:focus
+				on:blur
+				on:input
+				bind:value
+				{id}
+				{required}
+				{...$$restProps}
+				class={`
+					flex-1
+					max-w-full
+					max-h-full
+					peer
+					placeholder:text-transparent
+          placeholder:transition-colors
+          placeholder:duration-300
+          placeholder:placeholder-shown:focus:text-gray-500
+          focus:outline-none
+					${bg}
+				`}
+			/>
+		{:else}
+			<input
+				on:focus
+				on:blur
+				on:input
+				bind:value
+				{id}
+				{required}
+				{...$$restProps}
+				class={`
           flex-1
+					max-w-full
           peer
           placeholder:text-transparent
           placeholder:transition-colors
           placeholder:duration-300
           placeholder:placeholder-shown:focus:text-gray-500
           focus:outline-transparent
-        "
-			class:error
-		/>
+					focus-visible:outline-none
+					${bg}
+        `}
+				class:error
+			/>
+		{/if}
 		<label
 			for={id}
-			class="
+			class={`
           absolute
           -top-2.5
           left-2
-          bg-white
           px-1
           text-xs
           transition-all
           duration-300
           peer-focus:-top-2.5
-          peer-placeholder-shown:top-2
+          peer-placeholder-shown:top-1.5
           peer-placeholder-shown:text-base
           peer-focus:text-xs
           peer-required:after:content-['*']
           peer-required:after:text-red-600
           peer-required:after:font-bold
           peer-required:after:ml-0.5
-        "
+					rounded-md
+					${bg}
+        `}
 		>
 			{label}
 		</label>
