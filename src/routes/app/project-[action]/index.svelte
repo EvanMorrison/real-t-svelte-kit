@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$lib/actions/form';
 	import Button from '$lib/components/button.svelte';
-	import Header from '$lib/pageComponents/authPageHeader.svelte';
+	import Header from '$lib/pageComponents/navigationHeader.svelte';
 
 	let projectType: string;
 	let error: string;
@@ -24,6 +24,11 @@
 
 		const result = await res.json();
 		error = result.message;
+	};
+
+	const onCancel = (e: Event) => {
+		e.preventDefault();
+		window.history.back();
 	};
 </script>
 
@@ -77,7 +82,10 @@
 							<option value="research">Research</option>
 						</select>
 					</div>
-					<div class="my-8"><Button>Create</Button></div>
+					<div class="my-8">
+						<Button variant="text" on:click={onCancel}>Cancel</Button>
+						<Button>Create</Button>
+					</div>
 				</form>
 			</div>
 		</div>

@@ -17,8 +17,13 @@
 	</div>
 </div>
 <div class="flex justify-end p-2">
-	<a class="no-underline visited:text-gray-800" href="/logout.json" rel="external"
-		>{user.firstName} <span class="material-icons-round align-middle">logout</span> sign out</a
+	<a class="text-inherit visited:text-inherit" href="/app/account"
+		>{(user && user.firstName) || user.email || 'Account'}
+		<span class="material-icons-round align-middle text-xl">manage_accounts</span></a
+	>
+	&nbsp; | &nbsp;
+	<a class="text-inherit visited:text-inherit" href="/logout.json" rel="external"
+		>log out <span class="material-icons-round align-middle text-xl">logout</span></a
 	>
 </div>
 <div>
@@ -48,7 +53,7 @@
 
 <style>
 	.grid-item a {
-		@apply text-3xl text-gray-500 text-center no-underline;
+		@apply text-3xl text-gray-500 text-center no-underline flex flex-col items-center;
 	}
 
 	.home-icon {
