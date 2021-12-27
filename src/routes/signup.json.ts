@@ -67,22 +67,28 @@ export const post: RequestHandler = async (request: Request) => {
 		}
 	});
 
+	const headers = {
+		'Set-Cookie': serialize('sessionId', session.sessionId, {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'strict',
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 60 * 60 * 24 * 7 // one week
+		})
+	};
+
 	if (request.headers.accept !== 'application/json') {
 		return {
-			status: 200,
+			status: 302,
 			headers: {
-				'Set-Cookie': serialize('sessionId', session.sessionId, {
-					path: '/',
-					httpOnly: true,
-					sameSite: 'strict',
-					secure: process.env.NODE_ENV === 'production',
-					maxAge: 60 * 60 * 24 * 7 // one week
-				})
+				...headers,
+				location: '/app'
 			}
 		};
 	}
 
 	return {
-		status: 200
+		status: 200,
+		headers
 	};
 };
