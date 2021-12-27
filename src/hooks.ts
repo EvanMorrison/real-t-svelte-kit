@@ -16,6 +16,7 @@ export const handle: Handle = async ({ request, resolve }) => {
 		});
 		if (session) {
 			request.locals.user = {
+				userId: session.user.userId,
 				email: session.user.email,
 				role: session.user.role,
 				avatar: session.user.avatar || '',

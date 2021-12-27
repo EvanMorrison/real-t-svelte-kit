@@ -60,22 +60,18 @@ model Org {
 
 model Person {
   personId   Int            @id @default(autoincrement())
-  User       User?
   prefix     String?        @db.VarChar(255)
   firstName  String?        @db.VarChar(255)
   middleName String?        @db.VarChar(255)
   lastName   String?        @db.VarChar(255)
   suffix     String?        @db.VarChar(255)
-  emailId    Int?           @unique
   emails     Email[]
-  phoneId    Int?           @unique
   phones     Phone[]
   orgId      Int?
   orgs       PeopleInOrgs[]
   notes      String?
 
-  email Email?  @relation("PrimaryEmail", references: [emailId], fields: [emailId])
-  phone Phone?  @relation("PrimaryPhone", references: [phoneId], fields: [phoneId])
+  User  User?
   org   Org?    @relation("PrimaryOrg", references: [orgId], fields: [orgId])
   Party Party[]
 }
@@ -98,7 +94,6 @@ model Email {
   personId  Int
 
   person Person? @relation(references: [personId], fields: [personId])
-  Person Person? @relation("PrimaryEmail")
 }
 
 model Phone {
@@ -110,7 +105,6 @@ model Phone {
   person      Person? @relation(references: [personId], fields: [personId])
   personId    Int
   isPrimary   Boolean @default(false)
-  Person      Person? @relation("PrimaryPhone")
 }
 
 model Property {

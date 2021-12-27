@@ -16,17 +16,19 @@
   "
 >
 	<div class="self-start my-1 ml-[5rem]">
-		<h1 class="text-9xl font-extralight -ml-2.5">REAL-T</h1>
-		<h3>Real Estate Transaction Manager</h3>
+		<a href="/app" class="no-underline text-inherit visited:text-inherit">
+			<h1 class="text-9xl font-extralight -ml-2.5">REAL-T</h1>
+			<h3>Real Estate Transaction Manager</h3>
+		</a>
 	</div>
 	<div class="text-white self-start text-lg px-4">
 		<a class="text-inherit visited:text-inherit" href="/app/account"
-			>{(currentUser && currentUser.firstName) || currentUser.email || 'Account'}
-			<span class="material-icons-round align-bottom text-xl">manage_accounts</span></a
-		>
+			><span class="material-icons-round align-bottom text-xl">manage_accounts</span>
+			{(currentUser && currentUser.firstName) || currentUser.email || 'Account'}
+		</a>
 		|
 		<a class="text-inherit visited:text-inherit" href="/logout.json" rel="external"
-			>log out <span class="material-icons-round align-bottom text-xl">logout</span></a
+			><span class="material-icons-round align-bottom text-xl">logout</span> log out</a
 		>
 	</div>
 </div>

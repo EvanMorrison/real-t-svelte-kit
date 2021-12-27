@@ -56,7 +56,19 @@ export const post: RequestHandler = async (request: Request) => {
 	const newUser = await prisma.user.create({
 		data: {
 			email: data.email,
-			password: hashedPass
+			password: hashedPass,
+			person: {
+				create: {
+					emails: {
+						create: [
+							{
+								email: data.email,
+								isPrimary: true
+							}
+						]
+					}
+				}
+			}
 		}
 	});
 
