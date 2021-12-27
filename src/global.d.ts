@@ -17,6 +17,7 @@ interface User {
 	avatar?: string;
 	role: 'user' | 'admin';
 	createdAt: string;
+	person?: Person;
 }
 
 interface UserSignup {
@@ -62,20 +63,20 @@ interface Person {
 	personId?: number;
 	userId?: number;
 	prefix?: string;
-	firstName: string;
+	firstName?: string;
 	middleName?: string;
 	lastName?: string;
 	fullName?: string;
 	suffix?: string;
 	email?: string;
 	emails?: {
-		category: string;
-		address: string;
+		category?: string;
+		address?: string;
 	}[];
 	phone?: number;
 	phones?: {
-		category: string;
-		number: number;
+		category?: string;
+		number?: number;
 	}[];
 	org?: Org;
 	orgs?: Org[];

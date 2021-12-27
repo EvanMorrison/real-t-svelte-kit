@@ -8,9 +8,9 @@ export function bodyParser<T>(body: string | Uint8Array | ReadOnlyFormData): T {
 		if (val === 'true') value = true;
 		if (val === 'false') value = false;
 		if (key in result) {
-			result[key] = Array.isArray(result[key]) ? [...result[key], val] : [result[key], val];
+			result[key] = Array.isArray(result[key]) ? [...result[key], value] : [result[key], value];
 		} else {
-			result[key] = val;
+			result[key] = value;
 		}
 		return result;
 	}, {}) as T;

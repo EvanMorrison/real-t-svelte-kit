@@ -18,12 +18,12 @@
 </div>
 <div class="flex justify-end p-2">
 	<a class="text-inherit visited:text-inherit" href="/app/account"
-		>{(user && user.firstName) || user.email || 'Account'}
-		<span class="material-icons-round align-middle text-xl">manage_accounts</span></a
-	>
+		><span class="material-icons-round align-middle text-xl">manage_accounts</span>
+		{(user && user.firstName) || user.email || 'Account'}
+	</a>
 	&nbsp; | &nbsp;
 	<a class="text-inherit visited:text-inherit" href="/logout.json" rel="external"
-		>log out <span class="material-icons-round align-middle text-xl">logout</span></a
+		><span class="material-icons-round align-middle text-xl">logout</span> log out</a
 	>
 </div>
 <div>
@@ -35,12 +35,12 @@
 					<span class="material-icons-round home-icon">view_list</span>
 				</a>
 			</div>
-			<div class="grid-item">
+			<!-- <div class="grid-item">
 				<a class="main-nav-links" href="app/dashboard">
 					<h1>Case Dashboard</h1>
 					<span class="material-icons-round home-icon">chrome_reader_mode</span>
 				</a>
-			</div>
+			</div> -->
 			<div class="grid-item">
 				<a class="main-nav-links" href="app/project-create">
 					<h1>New Project</h1>
