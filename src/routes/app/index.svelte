@@ -1,22 +1,7 @@
-<script lang="ts" context="module">
-	export async function load({ session }) {
-		if (!session?.user) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
-
-		return {
-			props: {
-				user: session.user
-			}
-		};
-	}
-</script>
-
 <script lang="ts">
-	export let user: CurrentUser;
+	import { getContext } from 'svelte';
+
+	const user: CurrentUser = getContext('currentUser');
 </script>
 
 <div
@@ -40,30 +25,30 @@
 	<div>
 		<div class="flex justify-around py-8">
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseList">
+				<a class="main-nav-links" href="app/caseList">
 					<h1>All Cases</h1>
 					<span class="material-icons-round home-icon">view_list</span>
-				</div>
+				</a>
 			</div>
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseDashboard">
+				<a class="main-nav-links" href="app/dashboard">
 					<h1>Case Dashboard</h1>
 					<span class="material-icons-round home-icon">chrome_reader_mode</span>
-				</div>
+				</a>
 			</div>
 			<div class="grid-item">
-				<div class="main-nav-links" ui-sref="caseSetupStart">
-					<h1>New Case</h1>
+				<a class="main-nav-links" href="app/project-create">
+					<h1>New Project</h1>
 					<span class="material-icons-round home-icon">create_new_folder</span>
-				</div>
+				</a>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-	.grid-item {
-		@apply text-3xl text-gray-500 text-center;
+	.grid-item a {
+		@apply text-3xl text-gray-500 text-center no-underline;
 	}
 
 	.home-icon {

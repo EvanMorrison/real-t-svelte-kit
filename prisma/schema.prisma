@@ -9,18 +9,25 @@ generator client {
 }
 
 model User {
-  userId    Int       @id @default(autoincrement())
-  firstName String?   @db.VarChar(255)
-  lastName  String?   @db.VarChar(255)
-  email     String    @unique
-  password  String    @db.VarChar(255)
-  avatar    String?   @db.VarChar(255)
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  Session   Session[]
+  userId    Int      @id @default(autoincrement())
+  firstName String?  @db.VarChar(255)
+  lastName  String?  @db.VarChar(255)
+  email     String   @unique
+  password  String   @db.VarChar(255)
+  avatar    String?  @db.VarChar(255)
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+
+  person   Person? @relation(references: [personId], fields: [personId])
+  personId Int?    @unique
+
+  Session Session[]
+
+  ProjectCreated Project[] @relation("CreatedByUser")
+  ProjectUpdated Project[] @relation("UpdatedByUser")
 }
 
-enum Role {
+enum UserRole {
   GUEST
   USER
   ADMIN
@@ -30,4 +37,148 @@ model Session {
   sessionId String @unique @default(uuid())
   user      User   @relation(references: [userId], fields: [userId])
   userId    Int
+}
+
+model Org {
+  orgId    Int     @id @default(autoincrement())
+  name     String? @db.VarChar(255)
+  street1  String? @db.VarChar(255)
+  street2  String? @db.VarChar(255)
+  city     String? @db.VarChar(255)
+  state    String? @db.VarChar(255)
+  zipCode  String? @db.VarChar(15)
+  orgType  String? @db.VarChar(255)
+  parentId Int?
+  notes    String?
+
+  people        PeopleInOrgs[]
+  parent        Org?           @relation("OrgToOrg", references: [orgId], fields: [parentId])
+  children      Org[]          @relation("OrgToOrg")
+  PrimaryOrgFor Person[]       @relation("PrimaryOrg")
+  parties       Party[]
+}
+
+model Person {
+  personId   Int            @id @default(autoincrement())
+  User       User?
+  prefix     String?        @db.VarChar(255)
+  firstName  String?        @db.VarChar(255)
+  middleName String?        @db.VarChar(255)
+  lastName   String?        @db.VarChar(255)
+  suffix     String?        @db.VarChar(255)
+  emailId    Int?           @unique
+  emails     Email[]
+  phoneId    Int?           @unique
+  phones     Phone[]
+  orgId      Int?
+  orgs       PeopleInOrgs[]
+  notes      String?
+
+  email Email?  @relation("PrimaryEmail", references: [emailId], fields: [emailId])
+  phone Phone?  @relation("PrimaryPhone", references: [phoneId], fields: [phoneId])
+  org   Org?    @relation("PrimaryOrg", references: [orgId], fields: [orgId])
+  Party Party[]
+}
+
+model PeopleInOrgs {
+  person   Person  @relation(references: [personId], fields: [personId])
+  personId Int
+  org      Org     @relation(references: [orgId], fields: [orgId])
+  orgId    Int
+  title    String? @db.VarChar(255)
+
+  @@id([personId, orgId])
+}
+
+model Email {
+  emailId   Int     @id @default(autoincrement())
+  category  String? @db.VarChar(64)
+  email     String  @db.VarChar(255)
+  isPrimary Boolean @default(false)
+  personId  Int
+
+  person Person? @relation(references: [personId], fields: [personId])
+  Person Person? @relation("PrimaryEmail")
+}
+
+model Phone {
+  phoneId     Int     @id @default(autoincrement())
+  category    String? @db.VarChar(64)
+  countryCode Int?    @default(10)
+  phone       Int
+  extension   String?
+  person      Person? @relation(references: [personId], fields: [personId])
+  personId    Int
+  isPrimary   Boolean @default(false)
+  Person      Person? @relation("PrimaryPhone")
+}
+
+model Property {
+  propertyId       Int     @id @default(autoincrement())
+  street1          String? @db.VarChar(255)
+  street2          String? @db.VarChar(255)
+  city             String? @db.VarChar(255)
+  state            String? @db.VarChar(255)
+  zipCode          String? @db.VarChar(15)
+  country          String? @default("USA") @db.VarChar(255)
+  county           String? @db.VarChar(255)
+  parcelId         String? @db.VarChar(64)
+  shortDescription String?
+  legalDescription String?
+
+  projects PropertiesInProjects[]
+}
+
+model Project {
+  projectId   Int     @id @default(autoincrement())
+  projectType String? @db.VarChar(64)
+
+  createdBy       User?    @relation("CreatedByUser", references: [userId], fields: [createdByUserId])
+  createdByUserId Int
+  createdAt       DateTime @default(now())
+  updatedBy       User?    @relation("UpdatedByUser", references: [userId], fields: [updatedbyUserId])
+  updatedbyUserId Int?
+  updatedAt       DateTime @updatedAt
+
+  parcels PropertiesInProjects[]
+
+  parties PartiesInProjects[]
+  roles   String[]
+
+}
+
+model PropertiesInProjects {
+  property      Property @relation(references: [propertyId], fields: [propertyId])
+  propertyId    Int
+  project       Project  @relation(references: [projectId], fields: [projectId])
+  projectId     Int
+  vesting       String?
+  assessedValue Int?
+  assessedYear  Int?
+  updatedAt     DateTime @updatedAt
+
+  @@id([propertyId, projectId])
+}
+
+model Party {
+  partyId  Int     @id @default(autoincrement())
+  role     String? @db.VarChar(255)
+  isOrg    Boolean @default(false)
+  person   Person? @relation(references: [personId], fields: [personId])
+  personId Int?
+  org      Org?    @relation(references: [orgId], fields: [orgId])
+  orgId    Int?
+
+  projects PartiesInProjects[]
+}
+
+model PartiesInProjects {
+  project             Project @relation(fields: [projectId], references: [projectId])
+  projectId           Int
+  party               Party   @relation(fields: [partyId], references: [partyId])
+  partyId             Int
+  partyDisplayIndex   Int?    @default(0)
+  projectDisplayIndex Int?    @default(0)
+
+  @@id([projectId, partyId])
 }

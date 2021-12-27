@@ -1,8 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { parse, serialize } from 'cookie';
-import PrismaClient from '$lib/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '$lib/prisma';
 
 export const get: RequestHandler = async (request) => {
 	const cookies = parse(request.headers.cookie || '');

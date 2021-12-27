@@ -2,7 +2,6 @@
 	import type { Load, Page } from '@sveltejs/kit';
 
 	export const load: Load = ({ page }) => {
-		console.log('page', page);
 		return {
 			props: {
 				page
