@@ -20,9 +20,7 @@
 	import Header from '$lib/pageComponents/navigationHeader.svelte';
 	import { enhance } from '$lib/actions/form';
 
-	export let profile: Partial<User> = {
-		person: {}
-	};
+	export let profile: Partial<User> = {};
 
 	let success: string;
 
@@ -55,7 +53,6 @@
 				method="POST"
 			>
 				<input type="hidden" id="userId" name="userId" bind:value={profile.userId} />
-				<input type="hidden" id="personId" name="personId" bind:value={profile.person.personId} />
 				<InputField
 					id="firstName"
 					name="firstName"

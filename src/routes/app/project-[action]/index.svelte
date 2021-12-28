@@ -15,7 +15,6 @@
 	});
 
 	const handleCreateProject = async (res: Response) => {
-		console.log('got response', res);
 		if (res.ok) {
 			const result = await res.json();
 			goto(`/app/project-edit/${result.projectId}`);
@@ -75,11 +74,11 @@
 							name="projectType"
 							bind:value={projectType}
 						>
-							<option value="buySell">Purchase and Sale</option>
-							<option value="finance">Financing</option>
-							<option value="foreclosure">Foreclosure</option>
-							<option value="landDevelopment">Land Development</option>
-							<option value="research">Research</option>
+							<option value="Purchase & Sale">Purchase and Sale</option>
+							<option value="Financing">Financing</option>
+							<option value="Foreclosure">Foreclosure</option>
+							<option value="Land Development">Land Development</option>
+							<option value="Research">Research</option>
 						</select>
 					</div>
 					<div class="my-8">

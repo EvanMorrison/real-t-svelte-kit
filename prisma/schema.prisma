@@ -18,13 +18,14 @@ model User {
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
 
-  person   Person? @relation(references: [personId], fields: [personId])
-  personId Int?    @unique
-
   Session Session[]
 
-  ProjectCreated Project[] @relation("CreatedByUser")
-  ProjectUpdated Project[] @relation("UpdatedByUser")
+  OrgsCreated    Org[]     @relation("CreatedOrg")
+  OrgsUpdated    Org[]     @relation("UpdatedOrg")
+  PeopleCreated  Person[]  @relation("CreatedPerson")
+  PeopleUpdated  Person[]  @relation("UpdatedPerson")
+  ProjectCreated Project[] @relation("CreatedProject")
+  ProjectUpdated Project[] @relation("UpdatedProject")
 }
 
 enum UserRole {
@@ -40,40 +41,60 @@ model Session {
 }
 
 model Org {
-  orgId    Int     @id @default(autoincrement())
-  name     String? @db.VarChar(255)
-  street1  String? @db.VarChar(255)
-  street2  String? @db.VarChar(255)
-  city     String? @db.VarChar(255)
-  state    String? @db.VarChar(255)
-  zipCode  String? @db.VarChar(15)
-  orgType  String? @db.VarChar(255)
-  parentId Int?
-  notes    String?
-
+  orgId         Int            @id @default(autoincrement())
+  name          String?
+  fullLegalName String?
+  street1       String?        @db.VarChar(255)
+  street2       String?        @db.VarChar(255)
+  city          String?        @db.VarChar(255)
+  state         String?        @db.VarChar(255)
+  zipCode       String?        @db.VarChar(15)
+  country       String?        @default("USA") @db.VarChar(255)
+  orgType       String?        @db.VarChar(255)
+  parentId      Int?
+  notes         String?
   people        PeopleInOrgs[]
   parent        Org?           @relation("OrgToOrg", references: [orgId], fields: [parentId])
   children      Org[]          @relation("OrgToOrg")
-  PrimaryOrgFor Person[]       @relation("PrimaryOrg")
-  parties       Party[]
+  createdAt     DateTime       @default(now())
+  createdById   Int
+  updatedAt     DateTime?      @updatedAt
+  updatedById   Int?
+
+  createdBy         User?               @relation("CreatedOrg", fields: [createdById], references: [userId])
+  updatedBy         User?               @relation("UpdatedOrg", fields: [updatedById], references: [userId])
+  PartiesInProjects PartiesInProjects[]
 }
 
 model Person {
-  personId   Int            @id @default(autoincrement())
-  prefix     String?        @db.VarChar(255)
-  firstName  String?        @db.VarChar(255)
-  middleName String?        @db.VarChar(255)
-  lastName   String?        @db.VarChar(255)
-  suffix     String?        @db.VarChar(255)
-  emails     Email[]
-  phones     Phone[]
-  orgId      Int?
-  orgs       PeopleInOrgs[]
-  notes      String?
+  personId    Int            @id @default(autoincrement())
+  avatar      String?
+  prefix      String?        @db.VarChar(255)
+  fullName    String?
+  suffix      String?        @db.VarChar(255)
+  nickname    String?        @db.VarChar(64)
+  email       String?        @db.VarChar(255)
+  phone       String?        @db.VarChar(64)
+  otherEmails Email[]
+  otherPhones Phone[]
+  orgName     String?
+  title       String?        @db.VarChar(255)
+  street1     String?        @db.VarChar(255)
+  street2     String?        @db.VarChar(255)
+  city        String?        @db.VarChar(255)
+  state       String?        @db.VarChar(255)
+  zipCode     String?        @db.VarChar(15)
+  orgs        PeopleInOrgs[]
+  notes       String?
+  createdAt   DateTime       @default(now())
+  createdById Int
+  updatedAt   DateTime?      @updatedAt
+  updatedById Int?
 
-  User  User?
-  org   Org?    @relation("PrimaryOrg", references: [orgId], fields: [orgId])
-  Party Party[]
+  createdBy         User?               @relation("CreatedPerson", fields: [createdById], references: [userId])
+  updatedBy         User?               @relation("UpdatedPerson", fields: [updatedById], references: [userId])
+  PartiesInProjects PartiesInProjects[]
+  userUserId        Int?
 }
 
 model PeopleInOrgs {
@@ -88,7 +109,6 @@ model PeopleInOrgs {
 
 model Email {
   emailId   Int     @id @default(autoincrement())
-  category  String? @db.VarChar(64)
   email     String  @db.VarChar(255)
   isPrimary Boolean @default(false)
   personId  Int
@@ -99,12 +119,13 @@ model Email {
 model Phone {
   phoneId     Int     @id @default(autoincrement())
   category    String? @db.VarChar(64)
-  countryCode Int?    @default(10)
-  phone       Int
-  extension   String?
-  person      Person? @relation(references: [personId], fields: [personId])
-  personId    Int
+  countryCode String? @default("10")
+  phone       String  @db.VarChar(16)
+  extension   String? @db.VarChar(16)
   isPrimary   Boolean @default(false)
+  personId    Int
+
+  person Person? @relation(references: [personId], fields: [personId])
 }
 
 model Property {
@@ -127,10 +148,10 @@ model Project {
   projectId   Int     @id @default(autoincrement())
   projectType String? @db.VarChar(64)
 
-  createdBy       User?    @relation("CreatedByUser", references: [userId], fields: [createdByUserId])
+  createdBy       User?    @relation("CreatedProject", references: [userId], fields: [createdByUserId])
   createdByUserId Int
   createdAt       DateTime @default(now())
-  updatedBy       User?    @relation("UpdatedByUser", references: [userId], fields: [updatedbyUserId])
+  updatedBy       User?    @relation("UpdatedProject", references: [userId], fields: [updatedbyUserId])
   updatedbyUserId Int?
   updatedAt       DateTime @updatedAt
 
@@ -154,25 +175,24 @@ model PropertiesInProjects {
   @@id([propertyId, projectId])
 }
 
-model Party {
-  partyId  Int     @id @default(autoincrement())
-  role     String? @db.VarChar(255)
-  isOrg    Boolean @default(false)
-  person   Person? @relation(references: [personId], fields: [personId])
-  personId Int?
-  org      Org?    @relation(references: [orgId], fields: [orgId])
-  orgId    Int?
-
-  projects PartiesInProjects[]
-}
-
 model PartiesInProjects {
-  project             Project @relation(fields: [projectId], references: [projectId])
-  projectId           Int
-  party               Party   @relation(fields: [partyId], references: [partyId])
-  partyId             Int
-  partyDisplayIndex   Int?    @default(0)
-  projectDisplayIndex Int?    @default(0)
+  project    Project @relation(fields: [projectId], references: [projectId])
+  projectId  Int
+  orgId      Int     @default(0)
+  personId   Int     @default(0)
+  role       String? @db.VarChar(255)
+  isPrimary  Boolean @default(false)
+  worksForId Int?
 
-  @@id([projectId, partyId])
+  partyDisplayIndex Int? @default(0)
+
+  worksFor PartiesInProjects?  @relation("PartyToParty", fields: [partiesInProjectsProjectId, partiesInProjectsOrgId, partiesInProjectsPersonId], references: [projectId, orgId, personId])
+  hired    PartiesInProjects[] @relation("PartyToParty")
+  org      Org?                @relation(fields: [orgId], references: [orgId])
+  person   Person?             @relation(fields: [personId], references: [personId])
+
+  partiesInProjectsProjectId Int?
+  partiesInProjectsOrgId     Int?
+  partiesInProjectsPersonId  Int?
+  @@id([projectId, orgId, personId])
 }
