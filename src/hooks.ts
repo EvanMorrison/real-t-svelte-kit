@@ -35,7 +35,6 @@ export const handle: Handle = async ({ request, resolve }) => {
 };
 
 export const getSession: GetSession = (request) => {
-	console.log('request locals', request.locals);
 	return request.locals.user
 		? {
 				user: { ...request.locals.user }

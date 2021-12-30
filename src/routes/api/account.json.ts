@@ -12,14 +12,6 @@ export const get: RequestHandler = async (request) => {
 		const profile = await prisma.user.findUnique({
 			where: {
 				userId: request.locals.user.userId
-			},
-			include: {
-				person: {
-					include: {
-						org: true,
-						phones: true
-					}
-				}
 			}
 		});
 
@@ -46,7 +38,6 @@ export const patch: RequestHandler = async (request) => {
 	if (!auth.isAuthorized) return auth.unauthorizedResponse;
 
 	const data: Partial<User> = bodyParser(request.body);
-	console.log('parsed form data', data);
 	try {
 		const updatedUser = await prisma.user.update({
 			where: {
@@ -54,13 +45,7 @@ export const patch: RequestHandler = async (request) => {
 			},
 			data: {
 				firstName: data.firstName,
-				lastName: data.lastName,
-				person: {
-					update: {
-						firstName: data.firstName,
-						lastName: data.lastName
-					}
-				}
+				lastName: data.lastName
 			}
 		});
 		return {

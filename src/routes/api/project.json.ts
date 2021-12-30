@@ -15,9 +15,7 @@ export const post: RequestHandler = async (request) => {
 		const project = await prisma.project.create({
 			data: {
 				projectType: data.projectType,
-				createdByUserId: (
-					await prisma.user.findUnique({ where: { email: request.locals.user.email } })
-				).userId
+				createdByUserId: request.locals.user.userId
 			}
 		});
 
