@@ -20,10 +20,6 @@ model User {
 
   Session Session[]
 
-  OrgsCreated    Org[]     @relation("CreatedOrg")
-  OrgsUpdated    Org[]     @relation("UpdatedOrg")
-  PeopleCreated  Person[]  @relation("CreatedPerson")
-  PeopleUpdated  Person[]  @relation("UpdatedPerson")
   ProjectCreated Project[] @relation("CreatedProject")
   ProjectUpdated Project[] @relation("UpdatedProject")
 }
@@ -40,92 +36,25 @@ model Session {
   userId    Int
 }
 
-model Org {
-  orgId         Int            @id @default(autoincrement())
-  name          String?
-  fullLegalName String?
-  street1       String?        @db.VarChar(255)
-  street2       String?        @db.VarChar(255)
-  city          String?        @db.VarChar(255)
-  state         String?        @db.VarChar(255)
-  zipCode       String?        @db.VarChar(15)
-  country       String?        @default("USA") @db.VarChar(255)
-  orgType       String?        @db.VarChar(255)
-  parentId      Int?
-  notes         String?
-  people        PeopleInOrgs[]
-  parent        Org?           @relation("OrgToOrg", references: [orgId], fields: [parentId])
-  children      Org[]          @relation("OrgToOrg")
-  createdAt     DateTime       @default(now())
-  createdById   Int
-  updatedAt     DateTime?      @updatedAt
-  updatedById   Int?
+model Contact {
+  contactId Int     @id @default(autoincrement())
+  prefix    String? @default("")
+  firstName String? @default("")
+  lastName  String? @default("")
+  fullName  String? @default("")
+  suffix    String? @default("")
+  nickname  String? @default("")
+  email     String? @default("")
+  phone     String? @default("")
+  org       String? @default("")
+  title     String? @default("")
+  street    String? @default("")
+  city      String? @default("")
+  state     String? @default("")
+  zipCode   String? @default("")
+  avatar    String? @default("")
 
-  createdBy         User?               @relation("CreatedOrg", fields: [createdById], references: [userId])
-  updatedBy         User?               @relation("UpdatedOrg", fields: [updatedById], references: [userId])
-  PartiesInProjects PartiesInProjects[]
-}
-
-model Person {
-  personId    Int            @id @default(autoincrement())
-  avatar      String?
-  prefix      String?        @db.VarChar(255)
-  fullName    String?
-  suffix      String?        @db.VarChar(255)
-  nickname    String?        @db.VarChar(64)
-  email       String?        @db.VarChar(255)
-  phone       String?        @db.VarChar(64)
-  otherEmails Email[]
-  otherPhones Phone[]
-  orgName     String?
-  title       String?        @db.VarChar(255)
-  street1     String?        @db.VarChar(255)
-  street2     String?        @db.VarChar(255)
-  city        String?        @db.VarChar(255)
-  state       String?        @db.VarChar(255)
-  zipCode     String?        @db.VarChar(15)
-  orgs        PeopleInOrgs[]
-  notes       String?
-  createdAt   DateTime       @default(now())
-  createdById Int
-  updatedAt   DateTime?      @updatedAt
-  updatedById Int?
-
-  createdBy         User?               @relation("CreatedPerson", fields: [createdById], references: [userId])
-  updatedBy         User?               @relation("UpdatedPerson", fields: [updatedById], references: [userId])
-  PartiesInProjects PartiesInProjects[]
-  userUserId        Int?
-}
-
-model PeopleInOrgs {
-  person   Person  @relation(references: [personId], fields: [personId])
-  personId Int
-  org      Org     @relation(references: [orgId], fields: [orgId])
-  orgId    Int
-  title    String? @db.VarChar(255)
-
-  @@id([personId, orgId])
-}
-
-model Email {
-  emailId   Int     @id @default(autoincrement())
-  email     String  @db.VarChar(255)
-  isPrimary Boolean @default(false)
-  personId  Int
-
-  person Person? @relation(references: [personId], fields: [personId])
-}
-
-model Phone {
-  phoneId     Int     @id @default(autoincrement())
-  category    String? @db.VarChar(64)
-  countryCode String? @default("10")
-  phone       String  @db.VarChar(16)
-  extension   String? @db.VarChar(16)
-  isPrimary   Boolean @default(false)
-  personId    Int
-
-  person Person? @relation(references: [personId], fields: [personId])
+  parties Party[]
 }
 
 model Property {
@@ -141,7 +70,7 @@ model Property {
   shortDescription String?
   legalDescription String?
 
-  projects PropertiesInProjects[]
+  projects ParcelsInProjects[]
 }
 
 model Project {
@@ -155,44 +84,40 @@ model Project {
   updatedbyUserId Int?
   updatedAt       DateTime @updatedAt
 
-  parcels PropertiesInProjects[]
-
-  parties PartiesInProjects[]
-  roles   String[]
-
+  parcels ParcelsInProjects[]
+  parties Party[]
 }
 
-model PropertiesInProjects {
-  property      Property @relation(references: [propertyId], fields: [propertyId])
+model ParcelsInProjects {
   propertyId    Int
-  project       Project  @relation(references: [projectId], fields: [projectId])
   projectId     Int
   vesting       String?
   assessedValue Int?
   assessedYear  Int?
   updatedAt     DateTime @updatedAt
 
+  property Property @relation(references: [propertyId], fields: [propertyId])
+  project  Project  @relation(references: [projectId], fields: [projectId])
+
   @@id([propertyId, projectId])
 }
 
-model PartiesInProjects {
-  project    Project @relation(fields: [projectId], references: [projectId])
-  projectId  Int
-  orgId      Int     @default(0)
-  personId   Int     @default(0)
-  role       String? @db.VarChar(255)
-  isPrimary  Boolean @default(false)
-  worksForId Int?
+model Connection {
+  connectionId  Int     @id @default(autoincrement())
+  partyId       Int
+  isPeer        Boolean @default(true)
+  isSubordinate Boolean @default(false)
 
-  partyDisplayIndex Int? @default(0)
+  party Party @relation(references: [partyId], fields: [partyId])
+}
 
-  worksFor PartiesInProjects?  @relation("PartyToParty", fields: [partiesInProjectsProjectId, partiesInProjectsOrgId, partiesInProjectsPersonId], references: [projectId, orgId, personId])
-  hired    PartiesInProjects[] @relation("PartyToParty")
-  org      Org?                @relation(fields: [orgId], references: [orgId])
-  person   Person?             @relation(fields: [personId], references: [personId])
+model Party {
+  partyId   Int     @id @default(autoincrement())
+  contactId Int
+  projectId Int
+  role      String? @default("") // role of the connection, e.g., "counsel", "client", "agent", "trustee", "borrower", "lender", etc.
 
-  partiesInProjectsProjectId Int?
-  partiesInProjectsOrgId     Int?
-  partiesInProjectsPersonId  Int?
-  @@id([projectId, orgId, personId])
+  contact     Contact      @relation(references: [contactId], fields: [contactId])
+  project     Project      @relation(references: [projectId], fields: [projectId])
+  connections Connection[]
 }

@@ -1,24 +1,38 @@
 <script lang="ts">
 	export let id: string;
+	export let name = '';
 	export let label = '';
 	export let error = '';
 	export let helperText = '';
 	export let required = false;
 	export let value = '';
 	export let textarea = false;
+	export let placeholder = ' ';
 	export let bg = 'bg-white';
+
+	$: name = id;
 </script>
 
 <div class="relative py-1 w-full flex flex-col">
 	<div
 		class={`
       relative
-      border-2
-      border-indigo-500
-      rounded-lg
       p-1.5
+      pb-0
+			border-b-2
       flex
       flex-1
+			after:absolute
+			after:border-b-2
+			after:border-indigo-500
+			after:-bottom-[2px]
+			after:left-0
+			after:h-2
+			after:w-full
+			after:scale-x-0
+			after:transition-transform
+			after:duration-200
+			focus-within:after:scale-x-100
 			${bg}
     `}
 		class:error
@@ -30,7 +44,9 @@
 				on:input
 				bind:value
 				{id}
+				{name}
 				{required}
+				{placeholder}
 				{...$$restProps}
 				class={`
 					flex-1
@@ -52,7 +68,9 @@
 				on:input
 				bind:value
 				{id}
+				{name}
 				{required}
+				{placeholder}
 				{...$$restProps}
 				class={`
           flex-1

@@ -39,59 +39,39 @@ interface Address {
 	zipCode?: string;
 }
 
-interface Email {
-	emailId?: number;
-	category?: string;
-	email: string;
-	isPrimary?: boolean;
-}
-
-interface Org {
-	orgId?: number;
-	name: string;
-	street1?: string;
-	street2?: string;
+interface Contact {
+	contactId?: number;
+	prefix?: string;
+	fullName?: string;
+	suffix?: string;
+	nickname?: string;
+	email?: string;
+	phone?: number;
+	org?: string;
+	title?: string;
+	street?: string;
 	city?: string;
 	state?: string;
 	zipCode?: string;
-	orgType?: string;
-	parent?: Org;
-	children?: Org[];
+	avatar?: string;
 }
 
-interface Person {
-	personId?: number;
-	userId?: number;
-	prefix?: string;
-	firstName?: string;
-	middleName?: string;
-	lastName?: string;
-	fullName?: string;
-	suffix?: string;
-	email?: string;
-	emails?: {
-		category?: string;
-		address?: string;
-	}[];
-	phone?: number;
-	phones?: {
-		category?: string;
-		number?: number;
-	}[];
-	org?: Org;
-	orgs?: Org[];
-	title?: string;
-	notes?: string;
+interface Connection {
+	connectionId?: number;
+	partyId?: number;
+	isPeer?: boolean;
+	isSubordinate?: boolean;
+	party?: Party;
 }
 
 interface Party {
 	partyId?: number;
+	contactId?: number;
+	contact?: Contact;
+	projectId?: number;
+	project?: Project;
 	role?: string;
-	isOrg?: boolean;
-	person?: Person;
-	org?: Org;
-	partyDisplayIndex?: number;
-	projects?: Project[];
+	connections?: Connection[];
 }
 
 interface Property {
@@ -107,6 +87,13 @@ interface Property {
 	shortDescription?: string;
 	legalDescription?: string;
 	projects?: number[];
+}
+
+interface ParcelsInProjects {
+	propertyId?: number;
+	property?: Property;
+	projectId?: number;
+	project?: Project;
 	vesting?: string;
 	assessedValue?: number;
 	assessedYear?: number;
@@ -120,8 +107,8 @@ interface Project {
 	createdAt?: Date;
 	updatedBy?: User;
 	updatedAt?: Date;
-	parcels?: Property[];
-	parties?: Party[];
+	parcels?: PropertiesInProjects[];
+	parties?: PartiesInProjects[];
 	roles?: string[];
 	projectDisplayIndex?: number;
 }
