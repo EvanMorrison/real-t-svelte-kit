@@ -50,3 +50,9 @@
 		</table>
 	</div>
 </div>
+
+<style>
+	th {
+		@apply text-left;
+	}
+</style>

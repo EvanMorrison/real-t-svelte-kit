@@ -13,22 +13,22 @@ export const get: RequestHandler = async (request) => {
 	}
 
 	if (!id) {
-		const contacts = await prisma.contact.findMany();
+		const properties = await prisma.property.findMany();
 
 		return {
 			status: 200,
-			body: contacts
+			body: properties
 		};
 	} else if (id !== 'new') {
-		const contact = await prisma.contact.findUnique({
+		const parcel = await prisma.property.findUnique({
 			where: {
-				contactId: +id
+				propertyId: +id
 			}
 		});
 
 		return {
 			status: 200,
-			body: contact
+			body: parcel
 		};
 	} else {
 		return {
@@ -42,21 +42,21 @@ export const post: RequestHandler = async (request) => {
 	const auth = checkAuth(request);
 	if (!auth.isAuthorized) return auth.unauthorizedResponse;
 
-	const data: Contact = bodyParser(request.body);
+	const data: Property = bodyParser(request.body);
 
-	let id = data.contactId;
-	delete data.contactId;
+	let id = data.propertyId;
+	delete data.propertyId;
 
-	let contact = {};
+	let parcel = {};
 
 	if (!id) {
-		contact = await prisma.contact.create({
+		parcel = await prisma.property.create({
 			data
 		});
 	} else {
-		contact = await prisma.contact.update({
+		parcel = await prisma.property.update({
 			where: {
-				contactId: +id
+				propertyId: +id
 			},
 			data
 		});
@@ -64,7 +64,7 @@ export const post: RequestHandler = async (request) => {
 
 	return {
 		status: 200,
-		body: contact
+		body: parcel
 	};
 };
 
@@ -74,9 +74,9 @@ export const del: RequestHandler = async (request) => {
 
 	const id = request.query.get('id');
 
-	await prisma.contact.delete({
+	await prisma.property.delete({
 		where: {
-			contactId: +id
+			propertyId: +id
 		}
 	});
 
