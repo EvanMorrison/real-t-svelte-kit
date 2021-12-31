@@ -31,8 +31,7 @@
 	};
 </script>
 
-<div class="h-full flex flex-col">
-	<Header />
+
 	{#key key}
 		<div class="flex-1 flex flex-col gap-10 pt-16 bg-indigo-50" in:fade={{ duration: 200 }}>
 			<div class="flex place-content-center items-center">
@@ -89,4 +88,3 @@
 			</div>
 		</div>
 	{/key}
-</div>

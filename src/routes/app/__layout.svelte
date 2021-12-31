@@ -17,10 +17,14 @@
 
 <script lang="ts">
 	import { setContext } from 'svelte';
+	import Header from '$lib/pageComponents/navigationHeader.svelte';
 
 	export let currentUser: CurrentUser;
 
 	setContext('currentUser', currentUser);
 </script>
 
-<slot />
+<div class="h-full flex flex-col">
+	<Header />
+	<slot />
+</div>

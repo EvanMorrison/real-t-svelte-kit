@@ -19,12 +19,9 @@
 </script>
 
 <script lang="ts">
-	import Header from '$lib/pageComponents/navigationHeader.svelte';
-
 	export let projects;
 </script>
 
-<Header />
 <div class="flex flex-col items-center">
 	<h1 class="text-2xl py-8">PROJECTS</h1>
 	<div class="w-11/12 max-w-xl">

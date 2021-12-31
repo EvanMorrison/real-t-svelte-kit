@@ -59,8 +59,7 @@ model Contact {
 
 model Property {
   propertyId       Int     @id @default(autoincrement())
-  street1          String? @db.VarChar(255)
-  street2          String? @db.VarChar(255)
+  street           String? @db.VarChar(255)
   city             String? @db.VarChar(255)
   state            String? @db.VarChar(255)
   zipCode          String? @db.VarChar(15)

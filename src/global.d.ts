@@ -32,8 +32,7 @@ interface UserLogin {
 }
 
 interface Address {
-	street1?: string;
-	street2?: string;
+	street?: string;
 	city?: string;
 	state?: string;
 	zipCode?: string;
@@ -42,11 +41,13 @@ interface Address {
 interface Contact {
 	contactId?: number;
 	prefix?: string;
-	fullName?: string;
+	firstName?: string;
+	lastName?: string;
 	suffix?: string;
+	fullName?: string;
 	nickname?: string;
 	email?: string;
-	phone?: number;
+	phone?: string;
 	org?: string;
 	title?: string;
 	street?: string;
@@ -76,8 +77,7 @@ interface Party {
 
 interface Property {
 	propertyId?: number;
-	street1?: string;
-	street2?: string;
+	street?: string;
 	city?: string;
 	state?: string;
 	zipCode?: string;

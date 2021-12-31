@@ -17,7 +17,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button.svelte';
 	import InputField from '$lib/components/inputField.svelte';
-	import Header from '$lib/pageComponents/navigationHeader.svelte';
 	import { enhance } from '$lib/actions/form';
 
 	export let profile: Partial<User> = {};
@@ -34,7 +33,6 @@
 	};
 </script>
 
-<Header />
 <div class="flex flex-col items-center">
 	<h1 class="text-2xl py-8">MANAGE ACCOUNT</h1>
 	<div class="relative w-full min-h-[1.5rem]">
