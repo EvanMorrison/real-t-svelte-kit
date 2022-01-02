@@ -17,7 +17,6 @@
 	import { fade } from 'svelte/transition';
 	import Button from '$lib/components/button.svelte';
 	import InputField from '$lib/components/inputField.svelte';
-	import Header from '$lib/pageComponents/navigationHeader.svelte';
 	import AddressBlock from '$lib/components/addressBlock.svelte';
 	import { enhance } from '$lib/actions/form';
 
@@ -59,7 +58,6 @@
 </script>
 
 <div>
-	<Header />
 	<div class="flex items-start min-h-[3000px]">
 		<div class="flex flex-col gap-8 min-w-[300px] sticky top-0 left-0 px-6 pt-16">
 			<div><span class="font-bold mr-2">Project Type:</span> {project.projectType}</div>
