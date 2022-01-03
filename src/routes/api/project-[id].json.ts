@@ -20,7 +20,7 @@ export const get: RequestHandler = async (request) => {
 				},
 				parties: {
 					include: {
-						connections: true,
+						manages: true,
 						contact: true
 					}
 				}
@@ -105,7 +105,7 @@ export const post: RequestHandler = async (request) => {
 					},
 					parties: {
 						include: {
-							connections: true,
+							manages: true,
 							contact: true
 						}
 					}

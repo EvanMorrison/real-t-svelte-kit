@@ -57,14 +57,6 @@ interface Contact {
 	avatar?: string;
 }
 
-interface Connection {
-	connectionId?: number;
-	partyId?: number;
-	isPeer?: boolean;
-	isSubordinate?: boolean;
-	party?: Party;
-}
-
 interface Party {
 	partyId?: number;
 	contactId?: number;
@@ -72,7 +64,8 @@ interface Party {
 	projectId?: number;
 	project?: Project;
 	role?: string;
-	connections?: Connection[];
+	manages?: Party[];
+	managedBy?: Party[];
 }
 
 interface Property {
@@ -107,8 +100,8 @@ interface Project {
 	createdAt?: Date;
 	updatedBy?: User;
 	updatedAt?: Date;
-	parcels?: PropertiesInProjects[];
-	parties?: PartiesInProjects[];
+	parcels?: ParcelsInProjects[];
+	parties?: Party[];
 	roles?: string[];
 	projectDisplayIndex?: number;
 }

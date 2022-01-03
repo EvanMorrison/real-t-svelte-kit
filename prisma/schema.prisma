@@ -101,22 +101,14 @@ model ParcelsInProjects {
   @@id([propertyId, projectId])
 }
 
-model Connection {
-  connectionId  Int     @id @default(autoincrement())
-  partyId       Int
-  isPeer        Boolean @default(true)
-  isSubordinate Boolean @default(false)
-
-  party Party @relation(references: [partyId], fields: [partyId])
-}
-
 model Party {
   partyId   Int     @id @default(autoincrement())
   contactId Int
   projectId Int
   role      String? @default("") // role of the connection, e.g., "counsel", "client", "agent", "trustee", "borrower", "lender", etc.
+  manages   Party[] @relation("ManagesToManagedBy", references: [partyId], fields: [partyId])
+  managedBy Party[] @relation("ManagesToManagedBy", references: [partyId], fields: [partyId])
 
-  contact     Contact      @relation(references: [contactId], fields: [contactId])
-  project     Project      @relation(references: [projectId], fields: [projectId])
-  connections Connection[]
+  contact Contact @relation(references: [contactId], fields: [contactId])
+  project Project @relation(references: [projectId], fields: [projectId])
 }
