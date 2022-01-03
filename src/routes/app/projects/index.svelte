@@ -19,37 +19,70 @@
 </script>
 
 <script lang="ts">
-	export let projects;
+	import { goto } from '$app/navigation';
+
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
+
+	export let projects: Project[] = [];
+
+	let mounted = false;
+
+	onMount(() => {
+		mounted = true;
+	});
+
+	const clickAddProject = () => {
+		goto('/app/project-create');
+	};
+
+	const clickDeleteProject = (id: number) => {
+		console.log(`deleting project Id ${id}`);
+	};
 </script>
 
-<div class="flex flex-col items-center">
-	<h1 class="text-2xl py-8">PROJECTS</h1>
-	<div class="w-11/12 max-w-xl">
-		<table class="w-11/12">
-			<thead>
-				<th> id </th>
-				<th> project type </th>
-				<th> property address </th>
-			</thead>
-			<tbody>
-				{#each projects as project (project.projectId)}
-					<tr>
-						<td
-							><span
-								><a href={`/app/project-edit/${project.projectId}`}>{project.projectId}</a></span
-							></td
-						>
-						<td><span>{project.projectType || 'N/A'}</span></td>
-						<td
-							><span>{(project.parcels[0] && project.parcels[0].property.street1) || 'N/A'}</span
-							></td
-						>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+{#key mounted}
+	<div class="flex justify-center">
+		<div class="flex-1 p-4 max-w-4xl" in:fade>
+			<h1 class="text-xl text-center py-4">PROJECTS</h1>
+			<div class="py-4">
+				<button class="p-2" on:click={clickAddProject}>
+					<span class="material-icons-round align-middle">person_add</span> Add Project
+				</button>
+			</div>
+			<div class="w-full flex justify-center">
+				<table class="flex-1">
+					<thead>
+						<tr class="bg-indigo-100">
+							<th> Id </th>
+							<th> Project Type </th>
+							<th> Property Address </th>
+							<th class="max-w-[50px]" />
+						</tr>
+					</thead>
+					<tbody>
+						{#each projects as project (project.projectId)}
+							<tr class="even:bg-indigo-100">
+								<td
+									><a href={`/app/project-edit/${project.projectId}`}>
+										{project.projectId}
+									</a></td
+								>
+								<td>{project.projectType}</td>
+								<td>{(project.parcels[0] && project.parcels[0].property.street) || 'N/A'}</td>
+								<td class="max-w-[50px]"
+									><button on:click={() => clickDeleteProject(project.projectId)}
+										><span class="material-icons-round">clear</span></button
+									></td
+								>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-</div>
+{/key}
 
 <style>
 	th {

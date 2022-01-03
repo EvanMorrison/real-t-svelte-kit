@@ -4,7 +4,6 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$lib/actions/form';
 	import Button from '$lib/components/button.svelte';
-	import Header from '$lib/pageComponents/navigationHeader.svelte';
 
 	let projectType: string;
 	let error: string;
